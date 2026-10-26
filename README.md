@@ -52,13 +52,15 @@ const LINKS=[
 - `color` (opcional) muda a cor do ícone só desse link.
 - `CFG.ICON_COLOR`: `"tema"` usa a cor da capa da música, `"marca"` usa a cor oficial de cada rede.
 
-Textos como o título da aba (`<title>`) e a bio ("Seu texto de apresentação vai aqui.") ficam no HTML.
+Também em `CFG`: `NAME` (nome mostrado; vazio usa o do Discord), `HANDLE` (o @), `BIO` (texto de apresentação), `TITLE` (título da aba) e `FAVICON` (ícone da aba: um emoji ou o endereço `https://...` de uma imagem).
+
+**Quer personalizar mais (estilo, layout, Firebase)?** Use o arquivo `PROMPT-PARA-IA.md`: copie o texto para qualquer IA, anexe o seu `index.html` e diga o que quer mudar.
 
 ## 4. Publicar
 
 Qualquer hospedagem de arquivos estáticos serve: GitHub Pages, Netlify (arraste a pasta) ou Vercel. Não precisa de build.
 
-## Como funciona e limites
+## Como funciona (e limites)
 
 - **Última música:** fica salva no navegador de cada visitante (`localStorage`). Quem entra pela primeira vez, com você sem ouvir nada, vê só o aviso vazio. Para mostrar a sua última música a todos, é preciso guardá-la em um servidor (por exemplo, Firebase ou uma função da Vercel).
 - **Player do YouTube:** é pequeno e fica na barra do topo, que recolhe sozinha e deixa só o vinil. O YouTube recomenda um player maior e visível; em alguns navegadores (principalmente no iPhone) o som pode não tocar. O som só começa depois de um toque do visitante, por regra dos navegadores.
