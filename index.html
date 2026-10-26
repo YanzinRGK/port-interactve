@@ -129,7 +129,12 @@ a:focus-visible,button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 const CFG={
   DISCORD_ID:"",      // 1) seu ID numérico do Discord (ex.: "123456789012345678")
   YT_KEY:"",          // 2) chave da YouTube Data API v3 (opcional: sem ela o botão de tocar não acha o vídeo)
-  ICON_COLOR:"tema"   // "tema" = cor da capa da música | "marca" = cor oficial de cada rede
+  ICON_COLOR:"tema",  // "tema" = cor da capa da música | "marca" = cor oficial de cada rede
+  NAME:"",            // nome mostrado (vazio = usa o nome do Discord)
+  HANDLE:"",          // @ mostrado, sem o @ (vazio = usa o do Discord)
+  BIO:"Seu texto de apresentação vai aqui.",
+  TITLE:"Meus links", // título da aba do navegador
+  FAVICON:"🔗"        // ícone da aba: um emoji ou o endereço de uma imagem (https://...)
 };
 /* 3) Seus links: troque nome (n), endereço (u) e ícone (i).
       Ícones disponíveis: tiktok, youtube, instagram, discord, roblox, spotify, twitch, steam.
@@ -149,6 +154,16 @@ const ICONS={"tiktok":["0 0 24 24","M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.5
 const BRAND={"tiktok":"#fe2c55","youtube":"#ff0000","instagram":"#e4405f","discord":"#5865f2","roblox":"#e2231a","spotify":"#1db954","twitch":"#9146ff","steam":"#1b2838"};
 const ARROW='<svg class="ar" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 const $=id=>document.getElementById(id);
+
+/* título da aba, ícone da aba (favicon) e bio, vindos da CFG */
+document.title=CFG.TITLE;
+(function(){
+  let l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement("link");l.rel="icon";document.head.append(l)}
+  const f=String(CFG.FAVICON||"").trim();
+  if(/^(https?:|data:|\/|\.)/.test(f))l.href=f;
+  else if(f)l.href="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="50" font-size="80" text-anchor="middle" dominant-baseline="central">'+f.replace(/[<>&]/g,"")+'</text></svg>');
+})();
+document.querySelector(".bio").textContent=CFG.BIO;
 
 /* links */
 LINKS.forEach(l=>{
@@ -259,8 +274,8 @@ function apply(d){
   if(!d)return;
   const u=d.discord_user;
   if(u){
-    $("name").textContent=u.global_name||u.username;
-    $("user").textContent="@"+u.username;
+    $("name").textContent=CFG.NAME||u.global_name||u.username;
+    $("user").textContent="@"+(CFG.HANDLE?String(CFG.HANDLE).replace(/^@/,""):u.username);
     const av=$("av");
     if(u.avatar){av.textContent="";av.style.background="center/cover url(https://cdn.discordapp.com/avatars/"+u.id+"/"+u.avatar+"."+(u.avatar.startsWith("a_")?"gif":"png")+"?size=256)"}
     else av.textContent=(u.username||"?")[0].toUpperCase();
@@ -288,7 +303,7 @@ function connect(){
 }
 if(ID)connect();
 else{ // sem ID configurado: mostra um aviso em vez de ficar "Carregando…"
-  $("name").textContent="Seu nome";$("user").textContent="@usuario";
+  $("name").textContent=CFG.NAME||"Seu nome";$("user").textContent=CFG.HANDLE?"@"+String(CFG.HANDLE).replace(/^@/,""):"@usuario";
   $("idle").querySelector("p").textContent="Configure seu ID do Discord em CFG.DISCORD_ID (veja o README).";
 }
 </script>
