@@ -1,0 +1,102 @@
+# Prompt para personalizar o site com qualquer IA
+
+**Como usar**
+
+1. Abra o ChatGPT, o Claude, o Gemini ou outra IA.
+2. Copie **todo o texto do bloco abaixo** e cole na conversa.
+3. Anexe (ou cole) o seu `index.html` no final.
+4. Em **"O QUE EU QUERO"**, escreva o que deseja mudar.
+
+````markdown
+Você vai me ajudar a personalizar uma página de links (estilo "link na bio") que mostra a minha presença do Discord, a música que estou ouvindo no Spotify e um player do YouTube. É um ÚNICO arquivo `index.html` (HTML + CSS + JavaScript puro, sem frameworks e sem build). Vou anexar o arquivo no final desta mensagem.
+
+## Como você deve responder
+- Responda em português, com linguagem simples. Eu posso ser iniciante.
+- Para cada mudança, entregue UMA destas opções: (a) o `index.html` completo já alterado, ou (b) trechos no formato "PROCURE ISTO → TROQUE POR ISTO", dizendo em qual parte do arquivo ficam.
+- Mude só o que eu pedir. Não quebre as outras funções (música ao vivo, vinil, player do YouTube, última música, ícones).
+- Mantenha tudo em um único arquivo e sem bibliotecas externas (exceto o que eu pedir, como Google Fonts ou Firebase).
+- Se o pedido for ambíguo ou grande, faça no máximo 3 perguntas ANTES de mexer.
+- Depois de cada mudança, diga como testar e como desfazer.
+- Nunca peça para eu colar chaves, senhas ou tokens no chat. Chaves ficam só no meu arquivo.
+- Mantenha os créditos dos ícones.
+
+## Mapa do arquivo
+1. **Configuração** — procure `const CFG`:
+   - `DISCORD_ID`: meu ID numérico do Discord (a presença vem do Lanyard).
+   - `YT_KEY`: chave da YouTube Data API v3 (opcional).
+   - `ICON_COLOR`: `"tema"` (cor da capa do álbum) ou `"marca"` (cor oficial de cada rede).
+   - `NAME`: nome mostrado (vazio = nome do Discord). `HANDLE`: o @ mostrado. `BIO`: texto de apresentação. `TITLE`: título da aba. `FAVICON`: ícone da aba (um emoji ou o endereço `https://` de uma imagem).
+2. **Links** — procure `const LINKS`: cada link tem `n` (nome), `u` (endereço), `i` (ícone) e, opcionalmente, `color` (cor só daquele link).
+3. **Ícones** — `const ICONS` e `const BRAND`. Formato: `"nome":["viewBox","caminho SVG"]`, com `fill: currentColor` para mudarem de cor sozinhos. Já existem: tiktok, youtube, instagram, discord, roblox, spotify, twitch, steam. Para adicionar um novo, use um SVG de marca de uma biblioteca livre (ex.: Simple Icons, CC0), copie o `viewBox` e o `d` do `<path>`, e confira a licença e o crédito.
+4. **Estilo (CSS, dentro de `<style>`)**:
+   - `:root{--a:15,82,186}` = cor de destaque padrão (RGB). Ela também aparece no JavaScript, na função `setTheme` (quando não há música). Se eu mudar uma, mude as duas.
+   - `body` = cor de fundo, fonte e tamanho do texto.
+   - `.bg` = fundo com manchas de cor e a capa desfocada.
+   - `.glass` = efeito de vidro líquido (desfoque `blur(24px)`, brilho, bordas, `border-radius:30px`).
+   - `.prof` = cartão do perfil (`.av` foto, `.dot` bolinha de status).
+   - `.mus`, `.art`, `.bar` = card da música; `.cbtn` = botões redondos de play e lupa.
+   - `.mbar`, `.vinyl`, `.mplayer` = barra do topo com o vinil e o player pequeno. O tempo aberto é 5000 ms (procure `setTimeout(barClose,5000)`) e a rotação do vinil é `vinylSpin 4s`.
+   - `.links`, `.lnk`, `.ic` = lista de links e círculo dos ícones.
+5. **HTML** — o nome é `<h1 id="name">`, o @ é `<p id="user">` e a bio é `<p class="bio">`. As seções são: perfil, card da música e links.
+6. **JavaScript** — `setTheme` e `pickColor` (cor da capa), `showSong` (mostra a música ao vivo ou a última), `saveLast` e `loadLast` (última música no navegador), `ytFind`, `ytLoad` e `barShow` (YouTube e barra do vinil), `apply` e `connect` (Lanyard).
+
+## O que eu posso pedir (exemplos)
+- Nome, @, bio, título da aba e favicon (pela `CFG`).
+- Trocar, adicionar, remover e reordenar links; cor de cada ícone.
+- Estilo: paleta de cores, fonte (pode usar Google Fonts), tema claro ou escuro, mais ou menos vidro (blur e transparência), cantos mais retos ou mais redondos, fundo com imagem ou degradê, tamanho e velocidade do vinil, tempo da barra, tamanho dos cards, ligar ou desligar animações.
+- Layout: ordem das seções, esconder o card da música, centralizar, ajustes para celular.
+- Textos: mensagens e idioma.
+- Extras: botões novos, contador de visitas e curtidas, e "última música para todos". Esses dois últimos precisam de banco de dados (veja o tutorial de Firebase abaixo).
+- Limite: o site não tem servidor, então não dá para esconder chaves dentro do navegador.
+
+## Regras de segurança (siga sempre)
+- Se algo vier de visitantes (comentários, nomes), use `textContent`, nunca `innerHTML`.
+- A chave do YouTube deve ser restrita ao meu domínio e só à YouTube Data API v3.
+- Nunca deixe as regras do Firebase com `.read: true` e `.write: true` na raiz.
+- Não adicione rastreadores nem envie dados meus a terceiros.
+
+## Tutorial de Firebase (use quando eu pedir banco de dados)
+Objetivo: guardar a "última música" no servidor, para todo visitante vê-la mesmo quando eu não estiver ouvindo nada. Também serve para contadores de visitas e curtidas. Use o **Realtime Database**, que é simples e tem plano grátis (Spark). Os limites mudam, então me mande conferir em firebase.google.com/pricing.
+
+Me guie passo a passo, um de cada vez, e espere eu dizer que terminei:
+
+1. **Criar o projeto:** acesse console.firebase.google.com com a minha conta Google, clique em *Adicionar projeto*, escolha um nome e crie (pode desativar o Google Analytics).
+2. **Criar o banco:** no menu *Criação (Build)*, abra *Realtime Database* → *Criar banco de dados* → escolha a localização → comece em **modo bloqueado**.
+3. **Regras:** na aba *Regras*, cole o exemplo abaixo e clique em *Publicar*.
+4. **Registrar o app web:** em *Configurações do projeto* (engrenagem) → *Seus apps* → ícone `</>` (Web) → registre o app (sem Hosting) e copie o objeto `firebaseConfig`. **Ele não é segredo**: quem protege o banco são as regras. Se faltar o `databaseURL`, copie o endereço que aparece no topo da aba *Dados*.
+5. **No código:** me peça para eu colar o `firebaseConfig` e você cria `const FIREBASE={...}` no `index.html`, usando o SDK modular por CDN (`https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js` e `firebase-database.js`).
+6. **Lógica da última música:**
+   - Quando o Lanyard mostrar uma música ao vivo e ela for diferente da salva, grave em `lastSong` (`track_id`, `song`, `artist`, `album_art_url`).
+   - Quando não houver música ao vivo, leia `lastSong` do banco e mostre como "Última música ouvida". Mantenha o `localStorage` como plano B.
+7. **Testar:** abra o site, deixe uma música tocando e confira a aba *Dados* do Firebase. Depois abra o site em outro navegador, sem música tocando, e veja se a última música aparece.
+8. **Se o site usar Content-Security-Policy** (ex.: cabeçalhos da Vercel ou uma tag `<meta>`), libere `https://www.gstatic.com` em scripts e `https://*.firebaseio.com` e `wss://*.firebaseio.com` em conexões.
+
+Regras de exemplo (Realtime Database):
+
+```json
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "lastSong": {
+      ".read": true,
+      ".write": true,
+      ".validate": "newData.hasChildren(['track_id','song','artist','album_art_url'])",
+      "track_id": { ".validate": "newData.isString() && newData.val().length <= 40" },
+      "song": { ".validate": "newData.isString() && newData.val().length <= 150" },
+      "artist": { ".validate": "newData.isString() && newData.val().length <= 250" },
+      "album_art_url": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/i\\.scdn\\.co\\//)" },
+      "$other": { ".validate": false }
+    }
+  }
+}
+```
+
+Explique o limite: com essas regras, qualquer visitante consegue gravar `lastSong` (só no formato certo e com imagem do Spotify), então no pior caso aparece uma música errada. Para algo mais seguro, ofereça: (a) uma função serverless (Vercel ou Cloud Functions) que grava com credencial de administrador, deixando `.write: false` para o público, e/ou (b) Firebase App Check com reCAPTCHA para reduzir abusos.
+
+## O QUE EU QUERO
+(escreva aqui o que você quer mudar, por exemplo: "troque o nome para ..., deixe o estilo roxo e mais arredondado, e use este emoji como favicon")
+
+## MEU index.html
+(cole ou anexe o arquivo aqui)
+````
