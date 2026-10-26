@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Meus links</title>
+<style>
+:root{--a:15,82,186;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{min-height:100dvh;background:#05070f;color:#fff;font:400 15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* fundo */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:#05070f}
+.bg i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.75;transition:background 1.2s}
+.bg i:nth-child(1){width:70vmax;height:70vmax;left:-25vmax;top:-20vmax;background:rgb(var(--a))}
+.bg i:nth-child(2){width:55vmax;height:55vmax;right:-22vmax;bottom:-18vmax;background:rgba(var(--a),.7);filter:blur(90px) hue-rotate(40deg)}
+.bg i:nth-child(3){width:30vmax;height:30vmax;left:30%;top:45%;background:rgba(255,255,255,.14)}
+.bg b{position:absolute;inset:-15%;background:center/cover no-repeat;filter:blur(70px) saturate(1.7);opacity:.45;transition:background-image .8s}
+/* vidro líquido */
+.glass{position:relative;border-radius:30px;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.05) 55%,rgba(255,255,255,.1));
+-webkit-backdrop-filter:blur(24px) saturate(190%);backdrop-filter:blur(24px) saturate(190%);
+border:1px solid rgba(255,255,255,.22);
+box-shadow:inset 0 1.5px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(255,255,255,.1),inset 1px 0 0 rgba(255,255,255,.18),0 18px 50px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.25)}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 70% at 18% 0%,rgba(255,255,255,.34),transparent 55%)}
+.wrap{max-width:440px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top,0px)) 16px calc(40px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.wrap>*{min-width:0}
+.mrow{min-width:0}
+h1,.user,.bio{overflow-wrap:anywhere}
+/* perfil */
+.prof{padding:26px 20px 22px;text-align:center}
+.avw{position:relative;width:104px;height:104px;margin:0 auto 14px}
+.av{width:100%;height:100%;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.55);box-shadow:0 8px 26px rgba(0,0,0,.4);display:grid;place-items:center;font-size:40px;font-weight:700}
+.dot{position:absolute;right:4px;bottom:4px;width:22px;height:22px;border-radius:50%;background:#7b8194;border:4px solid rgba(20,24,40,.9)}
+.dot.online{background:#3ddc84}.dot.idle{background:#f5b942}.dot.dnd{background:#ff5d5d}
+h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.user{margin:2px 0 10px;opacity:.7;font-size:14px}
+.bio{margin:0;opacity:.88}
+/* música */
+.mus{padding:16px}
+.mrow{display:flex;gap:14px;align-items:center}
+.art{width:76px;height:76px;flex:none;border-radius:18px;background:rgba(255,255,255,.12) center/cover;box-shadow:0 8px 22px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.25)}
+.mt{min-width:0;flex:1}
+.lbl{font-size:12px;opacity:.7;margin-bottom:2px}
+.song{font-weight:650;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.artist{opacity:.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{margin-top:14px;height:6px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.6));box-shadow:0 0 12px rgba(var(--a),.9)}
+.tm{display:flex;justify-content:space-between;font-size:12px;opacity:.65;margin-top:5px;font-variant-numeric:tabular-nums}
+.idle-msg{opacity:.8;margin:0}
+[hidden]{display:none!important}
+/* botões redondos do card */
+.mbtns{display:flex;gap:8px;flex:none}
+.cbtn{width:36px;height:36px;padding:0;border-radius:50%;display:grid;place-items:center;color:#fff;text-decoration:none;cursor:pointer;background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 18px rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .3s;-webkit-tap-highlight-color:transparent}
+.cbtn:active{transform:scale(.9)}
+.cbtn svg{width:17px;height:17px;fill:currentColor}
+.cbtn .i-pause{display:none}
+.cbtn[aria-pressed=true]{background:linear-gradient(135deg,rgba(var(--a),.9),rgba(var(--a),.5))}
+.cbtn[aria-pressed=true] .i-pause{display:block}
+.cbtn[aria-pressed=true] .i-play{display:none}
+/* barra do topo (vinil) */
+.mbar{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:0;z-index:50;width:min(420px,calc(100vw - 12px));display:flex;align-items:center;gap:10px;padding:7px 12px 7px 8px;border-radius:999px 0 0 999px;transform:translateX(115%);transition:transform .7s cubic-bezier(.34,1.56,.64,1)}
+.mbar.open{transform:none}
+.mbar.peek{transform:translateX(calc(100% - 58px))}
+.vinyl{position:relative;flex:none;width:40px;height:40px;padding:0;border:0;border-radius:50%;cursor:pointer;background:repeating-radial-gradient(circle at center,#0f1317 0 1.5px,#252d36 1.5px 2.5px);box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.28);animation:vinylSpin 4s linear infinite;-webkit-tap-highlight-color:transparent}
+.vinyl::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(transparent 0 18%,rgba(255,255,255,.2) 25%,transparent 32% 68%,rgba(255,255,255,.16) 75%,transparent 82%)}
+.vinyl img{position:absolute;inset:9px;width:22px;height:22px;border-radius:50%;object-fit:cover}
+.vinyl::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#eaf2ff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.45)}
+@keyframes vinylSpin{to{transform:rotate(360deg)}}
+.mb-txt{display:flex;flex-direction:column;min-width:0;flex:1}
+.mb-title,.mb-artist{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mb-title{font-size:13px;font-weight:650}
+.mb-artist{font-size:12px;opacity:.75}
+.mplayer{flex:none;width:80px;height:45px;border-radius:9px;overflow:hidden;background:rgba(0,0,0,.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.mplayer iframe{width:100%;height:100%;border:0;pointer-events:none}
+/* links */
+.links{display:grid;gap:12px}
+.lnk{display:flex;align-items:center;gap:14px;padding:12px 16px 12px 12px;border-radius:26px;color:#fff;text-decoration:none;font-weight:600;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.lnk:hover{transform:translateY(-2px) scale(1.01)}
+.lnk:active{transform:scale(.98)}
+.ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(145deg,rgba(var(--a),.95),rgba(var(--a),.45));box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 16px rgba(0,0,0,.3);transition:background 1s}
+.ic svg{width:24px;height:24px;fill:currentColor}
+.lnk span.n{flex:1}
+.lnk .ar{opacity:.55;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+a:focus-visible,button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:rgba(30,36,60,.85)}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><b id="bgArt"></b><i></i><i></i><i></i></div>
+<div class="glass mbar" id="mbar" hidden>
+  <button class="vinyl" id="vinyl" type="button" aria-label="Abrir ou fechar a música"><img id="vinylImg" alt="" width="22" height="22"></button>
+  <div class="mb-txt"><span class="mb-title" id="mbTitle"></span><span class="mb-artist" id="mbArtist"></span></div>
+  <div class="mplayer" id="mplayer"></div>
+</div>
+<main class="wrap">
+  <section class="glass prof">
+    <div class="avw"><div class="av" id="av">?</div><span class="dot" id="dot" title="Status"></span></div>
+    <h1 id="name">Carregando…</h1>
+    <p class="user" id="user"></p>
+    <p class="bio">Seu texto de apresentação vai aqui.</p>
+  </section>
+
+  <section class="glass mus" aria-live="polite">
+    <div id="idle"><p class="idle-msg">Não está ouvindo nada no Spotify agora.</p></div>
+    <div id="live" hidden>
+      <div class="mrow">
+        <div class="art" id="art"></div>
+        <div class="mt"><div class="lbl" id="lbl">Ouvindo agora</div><div class="song" id="song"></div><div class="artist" id="artist"></div></div>
+        <div class="mbtns">
+          <button class="cbtn" id="ytPlay" type="button" aria-label="Ouvir no YouTube" aria-pressed="false"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg></button>
+          <a class="cbtn" id="ytSearch" target="_blank" rel="noopener noreferrer" aria-label="Pesquisar no YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 0 3.5 10.9l4.8 4.8 1.4-1.4-4.8-4.8A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/></svg></a>
+        </div>
+      </div>
+      <div class="bar" id="pbar"><span id="fill"></span></div>
+      <div class="tm" id="tm"><span id="t0">0:00</span><span id="t1">0:00</span></div>
+    </div>
+  </section>
+
+  <nav class="links" id="links" aria-label="Meus links"></nav>
+</main>
+
+<script>
+/* ===== CONFIG ===== */
+/* ============================================================
+   CONFIGURAÇÃO — preencha só esta parte (passo a passo no README.md)
+   ============================================================ */
+const CFG={
+  DISCORD_ID:"",      // 1) seu ID numérico do Discord (ex.: "123456789012345678")
+  YT_KEY:"",          // 2) chave da YouTube Data API v3 (opcional: sem ela o botão de tocar não acha o vídeo)
+  ICON_COLOR:"tema"   // "tema" = cor da capa da música | "marca" = cor oficial de cada rede
+};
+/* 3) Seus links: troque nome (n), endereço (u) e ícone (i).
+      Ícones disponíveis: tiktok, youtube, instagram, discord, roblox, spotify, twitch, steam.
+      Opcional: color:"#ff8800" muda a cor só daquele link. */
+const LINKS=[
+  {n:"TikTok",u:"https://www.tiktok.com/@exemplo",i:"tiktok"},
+  {n:"YouTube",u:"https://www.youtube.com/@exemplo",i:"youtube"},
+  {n:"Instagram",u:"https://www.instagram.com/exemplo",i:"instagram"},
+  {n:"Discord",u:"https://discord.gg/exemplo",i:"discord"},
+  {n:"Roblox",u:"https://www.roblox.com/users/1/profile",i:"roblox"}
+];
+/* Ícones SVG (preenchidos com currentColor = mudam de cor sozinhos). Formato: [viewBox, caminho].
+   Fontes: TikTok/YouTube/Roblox = Simple Icons (CC0); Instagram/Discord = Bootstrap Icons (MIT);
+   Spotify/Twitch = Font Awesome 6 Brands (CC BY 4.0); Steam = IcoMoon Free. Para usar outro, é só colocar o nome em `i:` no LINKS. */
+const ICONS={"tiktok":["0 0 24 24","M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"],"youtube":["0 0 24 24","M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"],"instagram":["0 0 16 16","M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 00-1.417.923A3.927 3.927 0 00.42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 001.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 00-.923-1.417A3.911 3.911 0 0013.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 01-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 01-.92-.598 2.48 2.48 0 01-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 100 1.92.96.96 0 000-1.92zm-4.27 1.122a4.109 4.109 0 100 8.217 4.109 4.109 0 000-8.217zm0 1.441a2.667 2.667 0 110 5.334 2.667 2.667 0 010-5.334z"],"discord":["0 0 16 16","M13.545 2.907a13.227 13.227 0 00-3.257-1.011.05.05 0 00-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 00-3.658 0 8.258 8.258 0 00-.412-.833.051.051 0 00-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 00-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 003.995 2.02.05.05 0 00.056-.019c.308-.42.582-.863.818-1.329a.05.05 0 00-.01-.059.051.051 0 00-.018-.011 8.875 8.875 0 01-1.248-.595.05.05 0 01-.02-.066.051.051 0 01.015-.019c.084-.063.168-.129.248-.195a.05.05 0 01.051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 01.053.007c.08.066.164.132.248.195a.051.051 0 01-.004.085 8.254 8.254 0 01-1.249.594.05.05 0 00-.03.03.052.052 0 00.003.041c.24.465.515.909.817 1.329a.05.05 0 00.056.019 13.235 13.235 0 004.001-2.02.049.049 0 00.021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 00-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"],"roblox":["0 0 24 24","m13.383 14.341-3.726-.958.959-3.726 3.726.959-.96 3.726zM4.913 0 0 19.088 19.088 24 24 4.912 4.912 0z"],"spotify":["0 0 496 512","M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4zm26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm31-76.2c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3z"],"twitch":["0 0 512 512","M391.17 103.47h-38.63v109.7h38.63ZM285 103h-38.63v109.75H285ZM120.83 0 24.31 91.42v329.16h115.83V512l96.53-91.42h77.25L487.69 256V0Zm328.24 237.75-77.22 73.12h-77.24l-67.6 64v-64h-86.87V36.58h308.93Z"],"steam":["0 0 16 16","M11 4.5a1.5 1.5 0 113.001.001A1.5 1.5 0 0111 4.5zm3.975-2.475A3.5 3.5 0 009.036 4L5.838 8.847c-.43.022-.856.132-1.249.328L2.122 7.247A1.313 1.313 0 00.506 9.315l2.436 1.905a3.157 3.157 0 106.168.228l3.891-3.484a3.5 3.5 0 001.975-5.939zM6 14.105A2.105 2.105 0 013.895 12l.001-.033 1.046.817a1.31 1.31 0 101.616-2.068l-.992-.776A2.105 2.105 0 116 14.105zM12.5 7a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"]};
+/* Cor oficial de cada rede (usada quando ICON_COLOR = "marca") */
+const BRAND={"tiktok":"#fe2c55","youtube":"#ff0000","instagram":"#e4405f","discord":"#5865f2","roblox":"#e2231a","spotify":"#1db954","twitch":"#9146ff","steam":"#1b2838"};
+const ARROW='<svg class="ar" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+const $=id=>document.getElementById(id);
+
+/* links */
+LINKS.forEach(l=>{
+  const a=document.createElement("a");a.className="glass lnk";a.href=l.u;a.target="_blank";a.rel="noopener noreferrer";
+  const ic=ICONS[l.i];
+  a.innerHTML='<span class="ic">'+(ic?'<svg viewBox="'+ic[0]+'" aria-hidden="true"><path d="'+ic[1]+'"/></svg>':'<b></b>')+'</span><span class="n"></span>'+ARROW;
+  if(!ic)a.querySelector(".ic b").textContent=(l.n||"?")[0];
+  const col=l.color||(CFG.ICON_COLOR==="marca"?BRAND[l.i]:"");   // cor própria do link > cor da marca > cor do tema
+  if(col)a.querySelector(".ic").style.background="linear-gradient(145deg,"+col+",color-mix(in srgb,"+col+" 55%,#000))";
+  a.querySelector(".n").textContent=l.n;
+  $("links").append(a);
+});
+
+/* ===== Cor da capa ===== */
+function pickColor(img){
+  const c=document.createElement("canvas");c.width=c.height=24;
+  const x=c.getContext("2d",{willReadFrequently:true});x.drawImage(img,0,0,24,24);
+  const d=x.getImageData(0,0,24,24).data;let R=0,G=0,B=0,W=0;
+  for(let i=0;i<d.length;i+=4){
+    const r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+    const sat=mx?(mx-mn)/mx:0,l=(mx+mn)/510,w=Math.pow(sat*(1-Math.abs(l-.5)*1.4)+.02,2);
+    R+=r*w;G+=g*w;B+=b*w;W+=w;
+  }
+  let rgb=[R/W,G/W,B/W],m=Math.max(...rgb);
+  if(m<130){const k=130/Math.max(m,1);rgb=rgb.map(v=>Math.min(255,v*k))}
+  return rgb.map(Math.round);
+}
+function setTheme(url){
+  const root=document.documentElement;
+  if(!url){root.style.setProperty("--a","15,82,186");$("bgArt").style.backgroundImage="";return}
+  $("bgArt").style.backgroundImage='url("'+url+'")';
+  const im=new Image();im.crossOrigin="anonymous";
+  im.onload=()=>{try{root.style.setProperty("--a",pickColor(im).join(","))}catch(e){}};
+  im.src=url;
+}
+
+/* ===== Última música (fica salva neste navegador) ===== */
+const LS_KEY="lastSong";
+function saveLast(s){try{localStorage.setItem(LS_KEY,JSON.stringify({track_id:s.track_id,song:s.song,artist:s.artist,album_art_url:s.album_art_url}))}catch(e){}}
+function loadLast(){try{const s=JSON.parse(localStorage.getItem(LS_KEY)||"null");return s&&s.song?s:null}catch(e){return null}}
+
+/* ===== YouTube + barra do vinil ===== */
+const mbar=$("mbar"),vinyl=$("vinyl"),ytPlay=$("ytPlay"),mplayer=$("mplayer"),ytCache={};
+let ytOn=false,cur=null,live=false,barTimer;
+const artists=s=>String(s.artist||"").replace(/;\s*/g,", ");
+const lblText=()=>live?"Ouvindo agora":"Última música ouvida";
+function barFill(s){
+  $("mbTitle").textContent=String(s.song||"").slice(0,80);
+  $("mbArtist").textContent=artists(s).slice(0,80);
+  const vi=$("vinylImg");vi.style.visibility=s.album_art_url?"visible":"hidden";
+  if(s.album_art_url)vi.src=s.album_art_url;else vi.removeAttribute("src");
+}
+/* Barra do topo: só aparece ao dar play. Entra pela direita, fica 5 s e recolhe deixando só o vinil. Tocar no vinil abre de novo. */
+function barOpen(){clearTimeout(barTimer);mbar.classList.remove("peek");mbar.classList.add("open");barTimer=setTimeout(barClose,5000)}
+function barClose(){clearTimeout(barTimer);mbar.classList.remove("open");mbar.classList.add("peek")}
+function barShow(){if(mbar.hidden){mbar.classList.remove("open","peek");mbar.hidden=false;void mbar.offsetWidth}barOpen()}
+mbar.addEventListener("pointerdown",()=>{if(mbar.classList.contains("open")){clearTimeout(barTimer);barTimer=setTimeout(barClose,5000)}});
+vinyl.addEventListener("click",()=>{mbar.classList.contains("open")?barClose():barOpen()});
+async function ytFind(q){
+  if(ytCache[q]!==undefined)return ytCache[q];
+  let id="";
+  if(CFG.YT_KEY){
+    try{
+      const r=await fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=1&q="+encodeURIComponent(q)+"&key="+CFG.YT_KEY);
+      const j=await r.json();id=j.items&&j.items[0]?j.items[0].id.videoId:"";
+    }catch(e){}
+  }
+  return ytCache[q]=id;
+}
+function ytStop(){ytOn=false;ytPlay.setAttribute("aria-pressed","false");mplayer.replaceChildren();clearTimeout(barTimer);mbar.hidden=true}
+async function ytLoad(){
+  if(!ytOn||!cur)return;
+  const s=cur,id=await ytFind(s.song+" "+artists(s));
+  if(!ytOn||!cur||cur.track_id!==s.track_id)return;
+  if(!id){ytStop();$("lbl").textContent=CFG.YT_KEY?"Não achei no YouTube":"Falta a chave do YouTube (YT_KEY)";setTimeout(()=>cur&&($("lbl").textContent=lblText()),3000);return}
+  const t=live&&s.timestamps,start=t&&t.start?Math.max(0,Math.floor((Date.now()-t.start)/1000)):0;
+  const f=document.createElement("iframe");
+  f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&controls=0&disablekb=1&playsinline=1&rel=0&start="+start;
+  f.allow="autoplay; encrypted-media; picture-in-picture";f.title="Player do YouTube";
+  mplayer.replaceChildren(f);
+}
+ytPlay.addEventListener("click",()=>{
+  if(ytOn)return ytStop();
+  if(!cur)return;
+  ytOn=true;ytPlay.setAttribute("aria-pressed","true");
+  barFill(cur);barShow();ytLoad();
+});
+
+/* ===== Mostrar a música (ao vivo ou a última salva) ===== */
+function showSong(s,isLive){
+  live=isLive;
+  if(!s){cur=null;$("idle").hidden=false;$("live").hidden=true;setTheme(null);ytStop();return}
+  $("idle").hidden=true;$("live").hidden=false;
+  const changed=!cur||cur.track_id!==s.track_id;
+  cur=s;
+  $("lbl").textContent=lblText();
+  $("pbar").hidden=!isLive;$("tm").hidden=!isLive;
+  $("song").textContent=s.song;$("artist").textContent=artists(s);
+  $("art").style.backgroundImage=s.album_art_url?'url("'+s.album_art_url+'")':"";
+  $("ytSearch").href="https://www.youtube.com/results?search_query="+encodeURIComponent(s.song+" "+artists(s));
+  if(changed){setTheme(s.album_art_url);if(ytOn){barFill(s);barShow();ytLoad()}}
+}
+showSong(loadLast(),false); // mostra a última música logo ao abrir, antes do Lanyard responder
+
+/* ===== Lanyard ===== */
+const fmt=s=>{s=Math.max(0,Math.floor(s/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function apply(d){
+  if(!d)return;
+  const u=d.discord_user;
+  if(u){
+    $("name").textContent=u.global_name||u.username;
+    $("user").textContent="@"+u.username;
+    const av=$("av");
+    if(u.avatar){av.textContent="";av.style.background="center/cover url(https://cdn.discordapp.com/avatars/"+u.id+"/"+u.avatar+"."+(u.avatar.startsWith("a_")?"gif":"png")+"?size=256)"}
+    else av.textContent=(u.username||"?")[0].toUpperCase();
+  }
+  $("dot").className="dot "+(d.discord_status||"");
+  const sp=d.listening_to_spotify&&d.spotify;
+  if(sp)saveLast(sp);
+  showSong(sp||loadLast(),!!sp);
+}
+setInterval(()=>{
+  if(!cur||!live||!cur.timestamps)return;const t=cur.timestamps,tot=t.end-t.start,pos=Math.min(tot,Date.now()-t.start);
+  $("fill").style.width=(pos/tot*100)+"%";$("t0").textContent=fmt(pos);$("t1").textContent=fmt(tot);
+},500);
+
+const ID=CFG.DISCORD_ID;let hb;
+if(ID)fetch("https://api.lanyard.rest/v1/users/"+ID).then(r=>r.json()).then(j=>j.success&&apply(j.data)).catch(()=>{});
+function connect(){
+  let ws;try{ws=new WebSocket("wss://api.lanyard.rest/socket")}catch(e){return}
+  ws.onmessage=e=>{
+    const m=JSON.parse(e.data);
+    if(m.op===1){hb=setInterval(()=>ws.send(JSON.stringify({op:3})),m.d.heartbeat_interval);ws.send(JSON.stringify({op:2,d:{subscribe_to_id:ID}}))}
+    else if(m.op===0)apply(m.d);
+  };
+  ws.onclose=()=>{clearInterval(hb);setTimeout(connect,4000)};
+}
+if(ID)connect();
+else{ // sem ID configurado: mostra um aviso em vez de ficar "Carregando…"
+  $("name").textContent="Seu nome";$("user").textContent="@usuario";
+  $("idle").querySelector("p").textContent="Configure seu ID do Discord em CFG.DISCORD_ID (veja o README).";
+}
+</script>
+</body>
+</html>
