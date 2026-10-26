@@ -74,3 +74,5 @@ Qualquer hospedagem de arquivos estáticos serve: GitHub Pages, Netlify (arraste
 - Steam: [IcoMoon Free](https://icomoon.io/) (CC BY 4.0).
 
 Os nomes e logos pertencem às respectivas empresas.
+
+Criado com ajuda do Claude (Anthropic).
